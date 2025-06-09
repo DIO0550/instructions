@@ -1,7 +1,7 @@
 {
   "name": "MCP Markdown Server",
   "dockerComposeFile": "docker-compose.yml",
-  "service": "dev",
+  "service": "prompt-mcp-server",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
   "customizations": {

@@ -1,7 +1,7 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  dev:
+  prompt-mcp-server:
     build:
       context: ../McpServer
       dockerfile: Dockerfile
