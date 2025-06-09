@@ -1,0 +1,27 @@
+{
+  "name": "MCP Markdown Server",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.autoSave": "onDelay",
+        "files.autoSaveDelay": 1000
+      }
+    }
+  },
+  "forwardPorts": [8547],
+  "postCreateCommand": "npm install",
+  "remoteUser": "node"
+}

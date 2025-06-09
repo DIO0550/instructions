@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: ../McpServer
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace:cached
+      - /workspace/node_modules
+    working_dir: /workspace
+    command: sleep infinity
+    ports:
+      - "8547:3000"
+    environment:
+      - NODE_ENV=development
