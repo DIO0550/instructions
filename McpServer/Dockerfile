@@ -14,6 +14,3 @@ RUN npm run build
 
 # Expose MCP server port
 EXPOSE 3000
-
-# Start the MCP server
-CMD ["npm", "start"]
