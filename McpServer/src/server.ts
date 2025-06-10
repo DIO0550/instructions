@@ -9,10 +9,22 @@ const markdownFiles = new Map<string, string>();
 
 async function loadMarkdownFiles() {
   try {
-    const files = await glob("../**/*.md", {
+    const promptFiles = await glob("../**/*.prompt.md", {
       cwd: process.cwd(),
       ignore: ["../node_modules/**", "../dist/**", "../McpServer/**"],
     });
+    
+    const instructionFiles = await glob("../**/*instructions.md", {
+      cwd: process.cwd(),
+      ignore: ["../node_modules/**", "../dist/**", "../McpServer/**"],
+    });
+    
+    const workspaceFiles = await glob("../workspace/**/*", {
+      cwd: process.cwd(),
+      ignore: ["../node_modules/**"],
+    });
+    
+    const files = [...promptFiles, ...instructionFiles, ...workspaceFiles];
 
     for (const file of files) {
       const fullPath = path.resolve(file);
@@ -91,7 +103,7 @@ function addResourcesForFiles() {
 server.prompt(
   "get_markdown_prompt",
   {
-    filename: z.string().describe("The markdown filename (with or without .md extension)"),
+    filename: z.string().describe("マークダウンファイル名（.md拡張子ありまたはなし）"),
   },
   async (args) => {
     let actualFile = args.filename;
@@ -125,8 +137,9 @@ server.prompt(
 // Add tools
 server.tool(
   "get_prompt",
+  "指定されたマークダウンファイルの内容を取得します",
   {
-    filename: z.string().describe("The markdown filename (with or without .md extension)"),
+    filename: z.string().describe("マークダウンファイル名（.md拡張子ありまたはなし）"),
   },
   async (args) => {
     let actualFile = args.filename;
@@ -156,6 +169,7 @@ server.tool(
 
 server.tool(
   "list_prompts",
+  "利用可能なマークダウンプロンプトの一覧を表示します",
   {},
   async () => {
     const promptList = Array.from(markdownFiles.keys())

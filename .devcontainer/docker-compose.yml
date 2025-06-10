@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   prompt-mcp-server:
+    container_name: prompt-mcp-server
     build:
       context: ../McpServer
       dockerfile: Dockerfile
