@@ -1,0 +1,39 @@
+name: TypeScript Object Issue
+description: TypeScriptオブジェクトの作成・改修に関するIssue
+title: "[TypeScript Object] "
+labels: ["typescript", "object"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## TypeScript Object Issue テンプレート
+
+        TypeScriptオブジェクト（型定義、インターフェース、クラス等）の作成・改修に関するIssueです。
+        実装前に必ず **[standard.prompt.md](../../../react/standard.prompt.md)** を参照してルールに従って開発してください。
+
+  - type: textarea
+    id: main-content
+    attributes:
+      label: "Issue内容"
+      description: "TypeScriptオブジェクトの内容を以下の形式で記載してください"
+      placeholder: |
+        ## 概要・目的
+        このオブジェクト（型定義・インターフェース・クラス等）の目的や機能について詳しく説明してください
+
+        ## 要件・仕様
+        - オブジェクト名: 
+        - 種類: (interface / type / class / enum 等)
+        - プロパティ: 
+        - メソッド: (必要な場合)
+        - 使用場面:
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        **参考ドキュメント:**
+        - [基本ルール](../../../react/standard.prompt.md)
+        - [コメントルール](../../../react/comment.prompt.md)

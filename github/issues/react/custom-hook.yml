@@ -1,0 +1,36 @@
+name: Custom Hook Issue
+description: Custom Hook の作成・改修に関するIssue
+title: "[Custom Hook] "
+labels: ["custom-hook", "react"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Custom Hook Issue テンプレート
+
+        Custom Hook の作成・改修に関するIssueです。
+        実装前に必ず **[custom-hook.prompt.md](../../../react/custom-hook.prompt.md)** を参照してルールに従って開発してください。
+
+  - type: textarea
+    id: main-content
+    attributes:
+      label: "Issue内容"
+      description: "Custom Hookの内容を以下の形式で記載してください"
+      placeholder: |
+        ## 概要・目的
+
+        ## 要件・仕様
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        **参考ドキュメント:**
+        - [Custom Hooks ルール](../../../react/custom-hook.prompt.md)
+        - [TDD ルール](../../../react/tdd.prompt.md)
+        - [Vitest テストルール](../../../react/vitest.prompt.md)
+        - [コメントルール](../../../react/comment.prompt.md)
+        - [基本ルール](../../../react/standard.prompt.md)

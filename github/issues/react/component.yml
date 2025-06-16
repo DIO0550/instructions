@@ -1,0 +1,42 @@
+name: Component Issue
+description: コンポーネントの作成・改修に関するIssue
+title: "[Component] "
+labels: ["component", "react"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Component Issue テンプレート
+
+        コンポーネントの作成・改修に関するIssueです。
+        実装前に必ず **[component.prompt.md](../../../react/component.prompt.md)** を参照してルールに従って開発してください。
+
+  - type: textarea
+    id: main-content
+    attributes:
+      label: "Issue内容"
+      description: "コンポーネントの内容を以下の形式で記載してください"
+      placeholder: |
+        ## 概要・目的
+        このコンポーネントの目的や機能について詳しく説明してください
+
+        ## 要件・仕様
+        - コンポーネント名: 
+        - Props: 
+        - 機能: 
+        - デザイン要件: 
+        - アクセシビリティ要件:
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        **参考ドキュメント:**
+        - [コンポーネントルール](../../../react/component.prompt.md)
+        - [Custom Hooks ルール](../../../react/custom-hook.prompt.md)
+        - [Vitest テストルール](../../../react/vitest.prompt.md)
+        - [コメントルール](../../../react/comment.prompt.md)
+        - [基本ルール](../../../react/standard.prompt.md)
