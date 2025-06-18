@@ -35,5 +35,3 @@ body:
         - [Vitest テストルール](../../../react/vitest.prompt.md)
         - [コメントルール](../../../react/comment.prompt.md)
         - [基本ルール](../../../react/standard.prompt.md)
-    validations:
-      required: true

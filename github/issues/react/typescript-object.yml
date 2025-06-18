@@ -32,5 +32,3 @@ body:
         **参考ドキュメント:**
         - [基本ルール](../../../react/standard.prompt.md)
         - [コメントルール](../../../react/comment.prompt.md)
-    validations:
-      required: true
