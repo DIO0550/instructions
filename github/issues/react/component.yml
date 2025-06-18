@@ -16,7 +16,7 @@ body:
     attributes:
       label: "Issue内容"
       description: "コンポーネントの内容を以下の形式で記載してください"
-      placeholder: |
+      value: |
         ## 概要・目的
         このコンポーネントの目的や機能について詳しく説明してください
 
@@ -25,13 +25,8 @@ body:
         - Props: 
         - 機能: 
         - デザイン要件: 
-        - アクセシビリティ要件:
-    validations:
-      required: true
+        - アクセシビリティ要件: 
 
-  - type: markdown
-    attributes:
-      value: |
         ---
 
         **参考ドキュメント:**
@@ -40,3 +35,5 @@ body:
         - [Vitest テストルール](../../../react/vitest.prompt.md)
         - [コメントルール](../../../react/comment.prompt.md)
         - [基本ルール](../../../react/standard.prompt.md)
+    validations:
+      required: true

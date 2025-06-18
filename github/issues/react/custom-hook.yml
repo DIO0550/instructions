@@ -16,16 +16,17 @@ body:
     attributes:
       label: "Issue内容"
       description: "Custom Hookの内容を以下の形式で記載してください"
-      placeholder: |
+      value: |
         ## 概要・目的
+        このCustom Hookの目的や機能について詳しく説明してください
 
         ## 要件・仕様
-    validations:
-      required: true
+        - Hook名: 
+        - 引数: 
+        - 戻り値: 
+        - 機能: 
+        - エラーハンドリング: 
 
-  - type: markdown
-    attributes:
-      value: |
         ---
 
         **参考ドキュメント:**
@@ -34,3 +35,5 @@ body:
         - [Vitest テストルール](../../../react/vitest.prompt.md)
         - [コメントルール](../../../react/comment.prompt.md)
         - [基本ルール](../../../react/standard.prompt.md)
+    validations:
+      required: true

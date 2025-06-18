@@ -16,7 +16,7 @@ body:
     attributes:
       label: "Issue内容"
       description: "TypeScriptオブジェクトの内容を以下の形式で記載してください"
-      placeholder: |
+      value: |
         ## 概要・目的
         このオブジェクト（型定義・インターフェース・クラス等）の目的や機能について詳しく説明してください
 
@@ -25,15 +25,12 @@ body:
         - 種類: (interface / type / class / enum 等)
         - プロパティ: 
         - メソッド: (必要な場合)
-        - 使用場面:
-    validations:
-      required: true
+        - 使用場面: 
 
-  - type: markdown
-    attributes:
-      value: |
         ---
 
         **参考ドキュメント:**
         - [基本ルール](../../../react/standard.prompt.md)
         - [コメントルール](../../../react/comment.prompt.md)
+    validations:
+      required: true
