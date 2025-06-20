@@ -10,6 +10,7 @@
 - 適切なコメントと JSDoc を記述する
 - ビジネスロジックは custom hooks に抽出して再利用する
 - 同ファイルに story ファイルを作成し、見た目の確認を行えるようにする
+  - story ファイルの拡張子は .stories.tsx を使用する
   - ただし動作の確認は、vitest で確認できるようにする
 - 命名規則は PascalCase でコンポーネント名、camelCase で props/変数名を使用する
 - アクセシビリティ（a11y）を考慮したマークアップを使用する（aria 属性、semantic HTML 等）
