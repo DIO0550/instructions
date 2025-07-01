@@ -60,10 +60,14 @@ function detectTechStack(context: string): TechStack {
   return {
     react: /\b(react|component|jsx|hook|state|props)\b/i.test(context),
     typescript: /\b(typescript|ts|type|interface)\b/i.test(context),
-    testing: /\b(test|testing|tdd|vitest|jest)\b/i.test(context),
+    testing: /\b(test|testing|tdd|vitest|jest|t-wada)\b/i.test(context),
     git: /\b(git|commit|branch|merge|pr|pull request)\b/i.test(context),
     implementation:
       /\b(implement|implementation|develop|code|function)\b/i.test(context),
+    refactoring:
+      /\b(refactor|refactoring|duplicate|similarity|tidy|cleanup|clean code)\b/i.test(
+        context
+      ),
   };
 }
 
@@ -91,6 +95,11 @@ export function getRelevantPrompts(context: string): PromptMetadata[] {
   }
   if (techStack.implementation) {
     relevantPrompts.push(...searchPrompts("implementation"));
+  }
+  if (techStack.refactoring) {
+    relevantPrompts.push(...searchPrompts("similarity"));
+    relevantPrompts.push(...searchPrompts("tidy"));
+    relevantPrompts.push(...searchPrompts("refactor"));
   }
 
   // 重複除去

@@ -26,4 +26,5 @@ export interface TechStack {
   testing: boolean;
   git: boolean;
   implementation: boolean;
+  refactoring: boolean;
 }
