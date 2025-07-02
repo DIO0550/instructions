@@ -11,6 +11,33 @@ import {
  * MCPツールを登録
  */
 export function registerTools(server: McpServer): void {
+  // implementation-workflow.prompt.md専用取得ツール
+  server.tool(
+    "get_implementation_workflow",
+    "実装フローとGitワークフローのガイドライン（implementation-workflow.prompt.md）を取得します",
+    {},
+    async () => {
+      const workflowFile = "implementation-workflow.prompt.md";
+      const matchingFile = findPromptByFilename(workflowFile);
+
+      if (!matchingFile) {
+        throw new Error(
+          `Implementation workflow file not found: ${workflowFile}`
+        );
+      }
+
+      const content = markdownFiles.get(matchingFile);
+      return {
+        content: [
+          {
+            type: "text",
+            text: content || "",
+          },
+        ],
+      };
+    }
+  );
+
   // 指定されたマークダウンファイルの内容を取得
   server.tool(
     "get_prompt",
