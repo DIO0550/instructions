@@ -13,5 +13,12 @@ services:
     command: sleep infinity
     ports:
       - "8547:3000"
+    networks:
+      - mcp-network
     environment:
       - NODE_ENV=development
+
+networks:
+  mcp-network:
+    driver: bridge
+    name: mcp-network
