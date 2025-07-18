@@ -22,6 +22,5 @@
     }
   },
   "forwardPorts": [8547],
-  "postCreateCommand": "npm install",
   "remoteUser": "node"
 }

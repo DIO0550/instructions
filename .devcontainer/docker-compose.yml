@@ -17,6 +17,8 @@ services:
       - mcp-network
     environment:
       - NODE_ENV=development
+      - MCP_TCP_PORT=3000
+      - MCP_EXECUTABLE=server.js
 
 networks:
   mcp-network:

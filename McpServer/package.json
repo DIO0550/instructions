@@ -7,16 +7,24 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "start:http": "node dist/http-server.js",
+    "start:http-streamable": "node dist/http-streamable-server.js",
+    "start:ws": "node dist/websocket-server.js",
+    "dev": "ts-node src/server.ts",
+    "dev:http": "ts-node src/http-server.ts",
+    "dev:http-streamable": "ts-node src/http-streamable-server.ts",
+    "dev:ws": "ts-node src/websocket-server.ts",
+    "tcp-bridge": "node dist/tcp-bridge.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1",
-    "express": "^4.18.2",
+    "@modelcontextprotocol/sdk": "^1.15.1",
+    "express": "^4.21.2",
     "glob": "^10.3.10",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.23",
     "@types/node": "^20.10.0",
     "ts-node": "^10.9.0",
     "typescript": "^5.3.0"
