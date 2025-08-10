@@ -71,12 +71,23 @@ export async function loadMarkdownFiles(): Promise<void> {
       ignore: ["../node_modules/**", "../dist/**", "../McpServer/**"],
     });
 
+    // code-review配下の全Markdown（下書きや特別なファイル名も含めて取り込む）
+    const codeReviewFiles = await glob("../code-review/**/*.md", {
+      cwd: process.cwd(),
+      ignore: ["../node_modules/**", "../dist/**", "../McpServer/**"],
+    });
+
     const workspaceFiles = await glob("../workspace/**/*", {
       cwd: process.cwd(),
       ignore: ["../node_modules/**"],
     });
 
-    const files = [...promptFiles, ...instructionFiles, ...workspaceFiles];
+    const files = [
+      ...promptFiles,
+      ...instructionFiles,
+      ...codeReviewFiles,
+      ...workspaceFiles,
+    ];
 
     for (const file of files) {
       const fullPath = path.resolve(file);

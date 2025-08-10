@@ -11,7 +11,6 @@
     "start:http-streamable": "node dist/http-streamable-server.js",
     "start:ws": "node dist/websocket-server.js",
     "dev": "ts-node src/server.ts",
-    "dev:http": "ts-node src/http-server.ts",
     "dev:http-streamable": "ts-node src/http-streamable-server.ts",
     "dev:ws": "ts-node src/websocket-server.ts",
     "tcp-bridge": "node dist/tcp-bridge.js"
