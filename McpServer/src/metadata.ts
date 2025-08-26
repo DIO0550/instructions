@@ -23,10 +23,15 @@ function extractKeywordsFromContent(content: string): string[] {
 
   // 技術用語を抽出（React, TypeScript, Git など）
   const techTerms = content.match(
-    /\b(react|typescript|javascript|git|npm|yarn|vite|next\.js|component|hook|test|tdd|refactor|commit)\b/gi
+    /\b(react|typescript|javascript|git|npm|yarn|vite|next\.js|component|hook|test|tdd|refactor|commit|review|レビュー|comment|コメント|magic|number|マジック|ナンバー|tidyfirst|naming|命名)\b/gi
   );
   if (techTerms) {
     keywords.push(...techTerms.map((term) => term.toLowerCase()));
+  }
+
+  // code-review関連の特別なキーワードを追加
+  if (content.includes("code-review") || content.includes("コードレビュー")) {
+    keywords.push("code-review", "コードレビュー", "review", "レビュー");
   }
 
   return keywords;
@@ -41,6 +46,40 @@ export function extractMetadata(file: string, content: string): PromptMetadata {
 
   // コンテンツからキーワードを抽出
   const keywords = [fileName, category, ...extractKeywordsFromContent(content)];
+
+  // code-reviewディレクトリのファイルには追加キーワードを付与
+  if (file.includes("/code-review/")) {
+    keywords.push("code-review", "コードレビュー", "review", "レビュー");
+
+    // ファイル名に基づく専門キーワードも追加
+    if (fileName.includes("comment")) {
+      keywords.push("comment", "コメント", "doc", "documentation");
+    }
+    if (fileName.includes("magic")) {
+      keywords.push(
+        "magic",
+        "number",
+        "string",
+        "マジックナンバー",
+        "マジックストリング"
+      );
+    }
+    if (fileName.includes("test")) {
+      keywords.push("test", "testing", "テスト", "unit", "integration");
+    }
+    if (fileName.includes("typescript")) {
+      keywords.push("typescript", "naming", "convention", "命名", "規則");
+    }
+    if (fileName.includes("tidyfirst")) {
+      keywords.push(
+        "tidyfirst",
+        "refactor",
+        "リファクタリング",
+        "tidy",
+        "beck"
+      );
+    }
+  }
 
   // 最初の段落を説明として使用
   const lines = content.split("\n").filter((line) => line.trim());

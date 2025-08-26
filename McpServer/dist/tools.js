@@ -167,6 +167,53 @@ export function registerTools(server) {
             ],
         };
     });
+    // code-reviewカテゴリの一覧
+    server.tool("list_code_review_prompts", "code-reviewカテゴリのプロンプト一覧を表示します", {}, async () => {
+        const list = Array.from(promptMetadata.values())
+            .filter((m) => m.category === "code-review")
+            .map((m) => `- ${m.file}: ${m.description}`)
+            .join("\n");
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: list || "No code-review prompts found.",
+                },
+            ],
+        };
+    });
+    // code-review配下の特定ファイル取得
+    server.tool("get_code_review_prompt", "code-review配下の指定ファイルを取得します", {
+        filename: z
+            .string()
+            .describe("code-review配下のファイル名（.md拡張子ありまたはなし）"),
+    }, async (args) => {
+        const name = args.filename.endsWith(".md")
+            ? args.filename
+            : `${args.filename}.md`;
+        // フル相対パスで探す
+        const candidates = Array.from(promptMetadata.values()).filter((m) => m.file.endsWith(`/code-review/${name}`) ||
+            m.file === `../code-review/${name}`);
+        const found = candidates[0]?.file;
+        const file = found || findPromptByFilename(name);
+        if (!file) {
+            throw new Error(`Code review prompt not found: ${args.filename}`);
+        }
+        // カテゴリチェック
+        const meta = promptMetadata.get(file);
+        if (!meta || meta.category !== "code-review") {
+            throw new Error(`Not a code-review prompt: ${file}`);
+        }
+        const content = markdownFiles.get(file) || "";
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: content,
+                },
+            ],
+        };
+    });
 }
 /**
  * MCPツールを登録
@@ -354,6 +401,57 @@ export function registerToolsNew(server) {
                 {
                     type: "text",
                     text: resultText,
+                },
+            ],
+        };
+    });
+    // code-reviewカテゴリの一覧
+    server.registerTool("list_code_review_prompts", {
+        title: "List Code Review Prompts",
+        description: "code-reviewカテゴリのプロンプト一覧を表示します",
+        inputSchema: {},
+    }, async () => {
+        const list = Array.from(promptMetadata.values())
+            .filter((m) => m.category === "code-review")
+            .map((m) => `- ${m.file}: ${m.description}`)
+            .join("\n");
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: list || "No code-review prompts found.",
+                },
+            ],
+        };
+    });
+    // code-review配下の特定ファイル取得
+    server.registerTool("get_code_review_prompt", {
+        title: "Get Code Review Prompt",
+        description: "code-review配下の指定ファイルを取得します",
+        inputSchema: {
+            filename: z
+                .string()
+                .describe("code-review配下のファイル名（.md拡張子ありまたはなし）"),
+        },
+    }, async ({ filename }) => {
+        const name = filename.endsWith(".md") ? filename : `${filename}.md`;
+        const candidates = Array.from(promptMetadata.values()).filter((m) => m.file.endsWith(`/code-review/${name}`) ||
+            m.file === `../code-review/${name}`);
+        const found = candidates[0]?.file;
+        const file = found || findPromptByFilename(name);
+        if (!file) {
+            throw new Error(`Code review prompt not found: ${filename}`);
+        }
+        const meta = promptMetadata.get(file);
+        if (!meta || meta.category !== "code-review") {
+            throw new Error(`Not a code-review prompt: ${file}`);
+        }
+        const content = markdownFiles.get(file) || "";
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: content,
                 },
             ],
         };

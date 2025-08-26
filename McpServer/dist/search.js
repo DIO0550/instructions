@@ -15,6 +15,29 @@ export function searchPrompts(query, limit = 5) {
         if (metadata.category.toLowerCase().includes(queryLower)) {
             score += 8;
         }
+        // code-reviewディレクトリのファイルには追加スコア
+        if (metadata.file.includes("/code-review/")) {
+            // code-review関連クエリには高スコア
+            if (["review", "レビュー", "code-review", "コードレビュー"].some((term) => queryLower.includes(term) || term.includes(queryLower))) {
+                score += 15;
+            }
+            // 特定のレビュータイプクエリ
+            if (queryLower.includes("comment") || queryLower.includes("コメント")) {
+                score += metadata.file.includes("comment") ? 12 : 3;
+            }
+            if (queryLower.includes("magic") || queryLower.includes("マジック")) {
+                score += metadata.file.includes("magic") ? 12 : 3;
+            }
+            if (queryLower.includes("test") && queryLower.includes("review")) {
+                score += metadata.file.includes("test-code-review") ? 12 : 3;
+            }
+            if (queryLower.includes("naming") || queryLower.includes("命名")) {
+                score += metadata.file.includes("naming") ? 12 : 3;
+            }
+            if (queryLower.includes("tidy")) {
+                score += metadata.file.includes("tidyfirst") ? 12 : 3;
+            }
+        }
         // キーワードでの一致
         const matchingKeywords = metadata.keywords.filter((keyword) => keyword.toLowerCase().includes(queryLower) ||
             queryLower.includes(keyword.toLowerCase()));
@@ -47,6 +70,8 @@ function detectTechStack(context) {
         git: /\b(git|commit|branch|merge|pr|pull request)\b/i.test(context),
         implementation: /\b(implement|implementation|develop|code|function)\b/i.test(context),
         refactoring: /\b(refactor|refactoring|duplicate|similarity|tidy|cleanup|clean code)\b/i.test(context),
+        // code-review関連の検出を追加
+        codeReview: /\b(review|レビュー|code.?review|コードレビュー|comment|コメント|magic.?number|naming|命名)\b/i.test(context),
     };
 }
 /**
@@ -76,6 +101,14 @@ export function getRelevantPrompts(context) {
         relevantPrompts.push(...searchPrompts("similarity"));
         relevantPrompts.push(...searchPrompts("tidy"));
         relevantPrompts.push(...searchPrompts("refactor"));
+    }
+    if (techStack.codeReview) {
+        relevantPrompts.push(...searchPrompts("code-review"));
+        relevantPrompts.push(...searchPrompts("コードレビュー"));
+        relevantPrompts.push(...searchPrompts("review"));
+        relevantPrompts.push(...searchPrompts("comment"));
+        relevantPrompts.push(...searchPrompts("magic"));
+        relevantPrompts.push(...searchPrompts("naming"));
     }
     // 重複除去
     const uniquePrompts = relevantPrompts.filter((prompt, index, self) => self.findIndex((p) => p.file === prompt.file) === index);

@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "lsp": {
+      "command": "npx",
+      "args": ["@mizchi/lsmcp", "--language", "typescript"]
+    }
+  }
+}

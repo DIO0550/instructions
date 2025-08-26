@@ -1,4 +1,4 @@
-# 単体テストルール（TDD対応）
+# 単体テストルール（TDD 対応）
 
 **Keywords**: test, tdd, unit-test, testing, jest, vitest
 
@@ -9,9 +9,10 @@
 - **振る舞いのテスト**：実装の詳細を確認するのではなく、その関数の振る舞いを確認するテストを作成する
 - **モックの利用**：**基本はモックを使用しないこと**。実際のコンポーネントや関数を使用してテストする
 - **モック許可対象**：外部依存（API 呼び出し、外部サービス、ファイルシステム、データベースなど）のみモックを使用可能
-- **describe の利用**：describe を利用して、テストの可読性を意識すること
+- **フラット構造の推奨**：describe ブロックの過度な使用を避け、可能な限りフラットな構造を保つ
+- **ネストの回避**：describe ブロックの過度なネストは避け、必要最小限の使用に留める
 - **テストケース名**：日本語にすること
-- **パラメータ化テスト**：it.each を活用して同じロジックの異なる入力値に対するテストを効率的に記述する
+- **パラメータ化テスト**：test.each を活用して同じロジックの異なる入力値に対するテストを効率的に記述する
 - **テスト量の適正化**：過度なテストは避け、重要な振る舞いに焦点を当てた効率的なテストを作成する
 
 ## TDD（テスト駆動開発）との連携
@@ -19,15 +20,16 @@
 このテストルールは、TDD（Test-Driven Development）のサイクルと組み合わせて使用できます：
 
 1. **Red**: 失敗するテストを先に書く
-2. **Green**: テストを通すための最小限の実装を行う  
+2. **Green**: テストを通すための最小限の実装を行う
 3. **Refactor**: コードを改善する
 
-**TDD実践時のポイント**：
+**TDD 実践時のポイント**：
+
 - テストファーストの原則を守る
 - 最小限の実装から始める
 - リファクタリング段階でコード品質を向上させる
 
-TDD実践時は、`react/tdd.prompt.md`や`react/t-wada-tdd.prompt.md`と併用してください。
+TDD 実践時は、`react/tdd.prompt.md`や`react/t-wada-tdd.prompt.md`と併用してください。
 
 ## モックルール詳細
 
@@ -49,33 +51,35 @@ TDD実践時は、`react/tdd.prompt.md`や`react/t-wada-tdd.prompt.md`と併用�
 
 ## パラメータ化テスト・実行効率化
 
-### it.each の活用
+### test.each の活用
 
-- 同じテストロジックで異なる入力値をテストする場合は `it.each` を使用する
+- 同じテストロジックで異なる入力値をテストする場合は `test.each` を使用する
 - 可読性を保ちながらテストケースの重複を避ける
 - テーブル形式でテストデータを整理する
+- describe を使わずにフラットな構造で記述する
 
 ```javascript
-// 例：it.each を使用したパラメータ化テスト
-describe("計算関数のテスト", () => {
-  it.each([
-    [1, 2, 3],
-    [5, 5, 10],
-    [-1, 1, 0],
-    [0, 0, 0],
-  ])("add(%i, %i) は %i を返す", (a, b, expected) => {
-    expect(add(a, b)).toBe(expected);
-  });
-
-  // オブジェクト形式での記述も可能
-  it.each([
-    { input: "hello", expected: "HELLO" },
-    { input: "world", expected: "WORLD" },
-    { input: "", expected: "" },
-  ])('toUpperCase("$input") は "$expected" を返す', ({ input, expected }) => {
-    expect(toUpperCase(input)).toBe(expected);
-  });
+// ✅ 推奨：test.each を使用したパラメータ化テスト（フラット構造）
+test.each([
+  [1, 2, 3],
+  [5, 5, 10],
+  [-1, 1, 0],
+  [0, 0, 0],
+])("add関数: add(%i, %i) は %i を返す", (a, b, expected) => {
+  expect(add(a, b)).toBe(expected);
 });
+
+// オブジェクト形式での記述も可能
+test.each([
+  { input: "hello", expected: "HELLO" },
+  { input: "world", expected: "WORLD" },
+  { input: "", expected: "" },
+])(
+  'toUpperCase関数: toUpperCase("$input") は "$expected" を返す',
+  ({ input, expected }) => {
+    expect(toUpperCase(input)).toBe(expected);
+  }
+);
 ```
 
 ### 並行実行の活用
@@ -153,3 +157,18 @@ Google のテストピラミッドに基づき、適切なテストの配分を�
 - **Bottom-Up アプローチ**: 単体テストから始めて段階的に統合テストへ
 - **重複の回避**: 下位レベルでテスト済みの機能は上位レベルで詳細テストしない
 - **失敗時の特定容易性**: テストが失敗した際に原因を素早く特定できる粒度を保つ
+
+## 関連プロンプト
+
+### テスト構造のベストプラクティス
+
+テストのネスト回避、フラット構造の推奨、可変変数の問題解決などの詳細については、以下の専用プロンプトを参照してください：
+
+**参照**: `react/test-structure.prompt.md`
+
+- Kent C. Dodds の「Avoid nesting when you're testing」原則の詳細
+- describe ブロックの適切な使用方法
+- 可変変数による問題とインライン化による解決策
+- AHA 原則の適用方法
+- テストファイルの分割戦略
+- クリーンアップの適切な使用
