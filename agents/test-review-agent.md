@@ -52,10 +52,10 @@ mcp__prompt-mcp-server__get_prompt("test-code-review-prompt.md")
 
 - テスト名が「何を」「どういう条件で」「どうなるか」を明確に表現しているか
 - テストファイルの構成とテストの分類が明確か（フラット構造推奨）
-- **基本的に`describe`を使用せずフラット構造を推奨**
+- **`describe`を使用せず完全フラット構造を推奨**
   - テスト名を具体的にすることで、`describe`によるグルーピングが不要になる
   - 各テストが独立して理解でき、テストの目的が名前から即座に把握できる
-  - ネストが深くなることを避け、テストの可読性と保守性を向上させる
+  - 共通の setup/teardown が必要な場合はテストファイルを分離する
 - AAA パターン(Arrange/Act/Assert)が明確に分離されているか
 - 1 つのテストで複数の観点をテストしすぎていないか
 
@@ -124,16 +124,32 @@ mcp__prompt-mcp-server__get_prompt("test-code-review-prompt.md")
 
 ### ⚠️ 問題のあるテストパターン
 
-#### 1. テスト名・構造の問題
+#### 1. describe 使用による構造の問題
+
 **ファイル**: `[filename]`
-**テスト**: `[test name]`
-**問題点**: テスト名が不明確で何をテストしているかが分からない
+**問題点**: describe を使用することでテスト構造が複雑化し、テストの意図が不明確
+**重要度**: 🔴 **Blocking（最重要・即修正必要）**
 **現在のコード**:
 ```[language]
 test('正常系', () => {
   // テストコード
 });
 ````
+
+**推奨アクション**: describe を使用せず、テスト名で「対象.メソッド - 条件 - 期待結果」を明確に表現する完全フラット構造を採用する。異なる setup/teardown が必要な場合や、関連性の低いテストが混在している場合は、機能ごと・責務ごとにテストファイルを分割する（例: `UserService.register.test.js`, `UserService.login.test.js`）
+
+#### 2. テスト名・構造の問題
+
+**ファイル**: `[filename]`
+**テスト**: `[test name]`
+**問題点**: テスト名が不明確で何をテストしているかが分からない
+**現在のコード**:
+
+```[language]
+test('正常系', () => {
+  // テストコード
+});
+```
 
 **改善案**:
 
@@ -151,14 +167,21 @@ test('有効なユーザーデータで登録処理を実行すると、ユー�
 });
 ```
 
-#### 2. テストの独立性の問題
+#### 3. テストの独立性の問題
 
 **ファイル**: `[filename]`
 **問題点**: 他のテストに依存している
 **影響**: テスト実行順序によって結果が変わる可能性
 **推奨アクション**: 各テストでデータを独立して準備
 
-#### 3. アサーションの問題
+#### 3. テストの独立性の問題
+
+**ファイル**: `[filename]`
+**問題点**: 他のテストに依存している
+**影響**: テスト実行順序によって結果が変わる可能性
+**推奨アクション**: 各テストでデータを独立して準備
+
+#### 4. アサーションの問題
 
 **ファイル**: `[filename]`
 **問題点**: 曖昧なアサーション
@@ -175,11 +198,73 @@ expect(result.status).toBe('success');
 expect(result.data).toBeDefined();
 ```
 
-#### 4. モック戦略の問題
+#### 5. モック戦略の問題
 
 **ファイル**: `[filename]`
 **問題点**: 過度なモック化により統合テストの価値が低下
 **推奨アクション**: 重要な統合ポイントは実際のオブジェクトを使用
+
+**ファイル**: `[filename]`
+**問題点**: describe を使用することでテスト構造が複雑化し、テストの意図が不明確
+**現在のコード**:
+
+```[language]
+describe('UserService', () => {
+  describe('register', () => {
+    test('成功する', () => {
+      // テストコード
+    });
+    test('エラーになる', () => {
+      // テストコード
+    });
+  });
+
+  describe('login', () => {
+    test('成功する', () => {
+      // テストコード
+    });
+  });
+});
+```
+
+**改善案**:
+
+```[language]
+test('UserService.register - 有効なユーザーデータで登録処理を実行すると、ユーザーIDが生成され保存される', () => {
+  // Arrange
+  const validUserData = { email: 'test@example.com', name: '太郎' };
+
+  // Act
+  const result = await userService.register(validUserData);
+
+  // Assert
+  expect(result.id).toBeDefined();
+  expect(result.email).toBe('test@example.com');
+});
+
+test('UserService.register - 重複するメールアドレスで登録処理を実行すると、ConflictErrorが発生する', () => {
+  // Arrange
+  const duplicateUserData = { email: 'existing@example.com', name: '太郎' };
+
+  // Act & Assert
+  await expect(userService.register(duplicateUserData))
+    .rejects.toThrow(ConflictError);
+});
+
+test('UserService.login - 有効な認証情報でログインを実行すると、認証トークンが返される', () => {
+  // Arrange
+  const credentials = { email: 'user@example.com', password: 'password' };
+
+  // Act
+  const result = await userService.login(credentials);
+
+  // Assert
+  expect(result.token).toBeDefined();
+  expect(typeof result.token).toBe('string');
+});
+```
+
+**推奨アクション**: describe を使用せず、テスト名で「対象.メソッド - 条件 - 期待結果」を明確に表現する完全フラット構造を採用する。異なる setup/teardown が必要な場合や、関連性の低いテストが混在している場合は、機能ごと・責務ごとにテストファイルを分割する（例: `UserService.register.test.js`, `UserService.login.test.js`）
 
 ### 📊 テストカバレッジ分析
 
@@ -224,9 +309,12 @@ UserService.test.js
 
 #### 主な問題パターン
 
-1. テスト名の不明確さ: X%
-2. テスト間依存: Y%
-3. 不適切なモック: Z%
+1. **describe 使用（最重要）**: X%
+2. テスト名の不明確さ: Y%
+3. テスト間依存: Z%
+4. 不適切なモック: A%
+
+**重要**: `describe`を使用しているテストファイルは最優先で修正が必要です。完全フラット構造への移行により、テストの可読性と保守性が大幅に向上します。
 
 ### ✅ 優秀なテストの例
 
@@ -261,6 +349,7 @@ UserService.test.js
 - テストの意図と実装の整合性を重視
 - プロダクションコードとの関係性を考慮
 - 実行可能で具体的な改善提案を提供
+- **`describe`の使用は最重要修正事項として扱い、必ず🔴 Blockingレベルで報告する**
 
 ### テストフレームワーク別の考慮
 - **Jest**: `test.each`やパラメータ化テストの活用評価、フラット構造での効果的なテスト設計
@@ -283,7 +372,7 @@ UserService.test.js
 #### JavaScript/TypeScript
 - TypeScriptの型安全性をテストで活用
 - モックライブラリ（jest.fn, sinon等）の適切な使用
-- フラット構造でのテストファイル設計（describe の代わりに明確なテスト名を使用）
+- 完全フラット構造でのテストファイル設計（describe を基本的に使用しない）
 
 #### Python
 - pytest fixture の効果的活用
